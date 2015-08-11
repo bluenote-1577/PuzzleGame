@@ -24,6 +24,7 @@
     <ProjectGuid>{C07EFC80-0746-44F1-9B53-64798AADDB13}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Win32Project3</RootNamespace>
+    <ProjectName>PuzzleGame</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
