@@ -60,16 +60,14 @@ void Blocktree::clickOccur(sf::RenderWindow& window, sf:: Text& text, const sf::
 				bool column = false;
 				bool row = false;
 
-				if (rowsize[id_row] >= 3){
-
-					if(matrix[0][id_row].type == matrix[1][id_row].type && 
-					matrix[1][id_row].type == matrix[2][id_row].type)
-						row = true;
+				if (row_ids.find(idcheck) != row_ids.end())
+				{
+					row = true;
 				}
-				if(colsize[id_col] >= 3) {
-					if (matrix[id_col][0].type == matrix[id_col][1].type &&
-					matrix[id_col][1].type == matrix[id_col][2].type)
-						column = true;
+
+				if(column_ids.find(idcheck) != column_ids.end())
+				{
+					column = true;
 				}
 
 			//	if (column==true && row== true)
@@ -80,10 +78,10 @@ void Blocktree::clickOccur(sf::RenderWindow& window, sf:: Text& text, const sf::
 				 if(row == true)
 					eraserow(id_row);
 
-				else if(row==true){
+				else if(column==true){
 		
-			
-						score++;
+					erasecolumn(id_col);
+
 					}
 
 				
@@ -107,6 +105,11 @@ void Blocktree::clickOccur(sf::RenderWindow& window, sf:: Text& text, const sf::
 }
 
 
+void Blocktree::updateScan()
+{
+	scanrow();
+	scancolumn();
+}
 
 
 void Blocktree:: initializeTree (const sf::Texture& Pink, const sf::Texture& Teal,
@@ -121,7 +124,7 @@ void Blocktree:: initializeTree (const sf::Texture& Pink, const sf::Texture& Tea
 
 		for ( int i = 0; 12>i; i++)
 		{
-		int random = rand()%3;
+		//int random = rand()%3;
 		int random = 0;
 		// use above for testing
 			
@@ -155,7 +158,10 @@ void Blocktree:: initializeTree (const sf::Texture& Pink, const sf::Texture& Tea
 
 	score = 0;
 	colsize[0]=matrix[0].size(),colsize[1] =matrix[1].size(),colsize[2] = matrix[2].size(); 
-	rowsize[0]=3,rowsize[1]=3,rowsize[2]=3;
+	row_is_full[0] = true;
+	row_is_full[1] = true;
+	row_is_full[2] = true;
+	row_is_full[3] = true;
 
 }
 
@@ -182,6 +188,8 @@ void Blocktree::eraserow(int id_row){
 			block.setOrigin();
 					
 	colsize[0]--,colsize[1]--,colsize[2]--;
+	row_ids.clear();
+	column_ids.clear();
 
 
 
@@ -195,9 +203,53 @@ void Blocktree::erasecolumn(int id_row){
 }
 
 
-std::set<int> Blocktree:: columnscan(int id_col)
+void Blocktree:: scancolumn()
 {
-	int array[] = {4,3,2,1};
-	std::set<int> dude(array,array+5);
-	return dude;
+
+
+
+	
 }
+
+
+void Blocktree:: scanrow()
+{
+
+		int fullrows;
+		
+		if (matrix[0].size() >= matrix[1].size())
+		{
+			if (matrix[1].size() > matrix[2].size())
+				fullrows = matrix[2].size();
+			else fullrows = matrix[1].size();
+		}
+
+		else
+		
+		{ 
+			if (matrix[0].size() > matrix[2].size())
+				fullrows = matrix[2].size();
+			else fullrows = matrix[0].size();
+		}
+
+		
+		for(int b = 0; b<fullrows ; b++)
+			row_is_full[b] = true;
+	
+		for(int c = 4; c>fullrows; c--)
+			row_is_full[c-1] = false;
+		
+		for (int i = 0; i<4; i++){
+		if (row_is_full[i] == true){
+			if(matrix[0][i].type == matrix[1][i].type && 
+						matrix[1][i].type == matrix[2][i].type){
+						if(row_ids.find(matrix[0][i].id) == row_ids.end())	row_ids.insert(matrix[0][i].id);
+						if(row_ids.find(matrix[1][i].id) == row_ids.end())	row_ids.insert(matrix[1][i].id);
+						if(row_ids.find(matrix[2][i].id) == row_ids.end())	row_ids.insert(matrix[2][i].id);
+					
+			}
+		}
+	}
+
+}
+

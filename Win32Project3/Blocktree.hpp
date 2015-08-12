@@ -7,7 +7,7 @@
 #include "Block.hpp"
 #include "Includer.hpp"
 #include <list>
-#include <set>
+#include <unordered_set>
 
 class Blocktree : public Block{
 
@@ -18,7 +18,8 @@ public:
 	void drawTree(sf::RenderTarget& window, sf::RenderStates state);
 	int score;
 	void clickOccur(sf::RenderWindow& window,sf::Text& text, const sf::FloatRect& reset);
-	
+	void updateScan();
+	void clearScan();
 
 private:
 
@@ -28,7 +29,7 @@ private:
 	sf:: Texture Green;
 	sf:: Texture Teal;
 
-	int rowsize[3];
+	bool row_is_full[4];
 	int colsize[3];
 
 	void initializeTree(const sf::Texture& colour1,const 
@@ -36,7 +37,14 @@ private:
 
 	void eraserow(int idmap_row);
 	void erasecolumn(int idmap_column);
-	std::set<int> columnscan(int idmap_column);
+	
+	void scancolumn();
+	void scanrow();
+	std::unordered_set<int> column_ids;
+	std::unordered_set<int> row_ids;
+
+
+
 }
 
 ;

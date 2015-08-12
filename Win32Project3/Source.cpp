@@ -112,8 +112,10 @@ int main(void) {
 	while (window.isOpen())
 	{
 	
+
 		s = std::to_string(mainTree.score);
 		score.setString(s);
+		mainTree.updateScan();
 		sf::Event event;
 		while(window.pollEvent(event))
 		{
