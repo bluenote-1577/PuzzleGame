@@ -9,7 +9,7 @@ public:
 	Block();
 	Block(const sf::Texture &texture);
 	virtual void draw(sf::RenderTarget& window,  sf::RenderStates state ) const;
-	void setOrigin(float x, float y);
+	void setOrigin();
 	sf:: Sprite blockSprite;
 	enum Type{
 		Pink,

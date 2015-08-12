@@ -17,10 +17,12 @@ void Block:: draw(sf::RenderTarget& window,  sf::RenderStates state) const
 
 }
 
-void Block:: setOrigin(float x, float y)
+void Block:: setOrigin()
 {
 
-	blockSprite.setOrigin(x,y);
+		float xpos = (float)(-240-40*(this->id/4));
+		float ypos = (float)(-260+40*(this->id%4));
+	blockSprite.setOrigin(xpos,ypos);
 
 
 
