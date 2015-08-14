@@ -22,6 +22,8 @@ public:
 	void updateScan();
 	void clearScan();
 
+	void updateGame(sf::Time time);
+
 private:
 
 	struct columnholder{
@@ -62,7 +64,7 @@ private:
 
 	bool findid(int idcol, int idcheck);
 
-
+	bool finished_updating;
 
 }
 

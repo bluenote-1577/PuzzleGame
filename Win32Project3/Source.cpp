@@ -72,6 +72,7 @@ int main(void) {
 
 	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 	sf::RenderWindow window(sf::VideoMode (600,400), "My Window");
+	window.setFramerateLimit(60);
 	sf::RenderStates state;
 
 	Blocktree mainTree;
@@ -85,7 +86,7 @@ int main(void) {
 
 	std::string s;
 	display.setFont(main_font);
-	display.setPosition(240.0,50.0);
+	display.setPosition(50.0,50.0);
 	display.setColor(sf::Color::Black);
 	display.setString("Your score :");
 	display.setStyle(0);
@@ -93,7 +94,7 @@ int main(void) {
 	
 
 	score.setFont(main_font);
-	score.setPosition(240.0,80.0);
+	score.setPosition(50.0,80.0);
 	score.setColor(sf::Color::Black);
 	score.setStyle(0);
 
@@ -109,14 +110,18 @@ int main(void) {
 	reset_button.setOutlineThickness(2.0);
 	reset_button.setFillColor(sf::Color::White);
 	sf::FloatRect reset_bounds = reset_button.getGlobalBounds();
+	sf::Clock clock;
+	sf:: Time time;
 
 	while (window.isOpen())
 	{
 	
-
+		time = clock.restart();
 		s = std::to_string(mainTree.score);
 		score.setString(s);
 		
+
+
 		sf::Event event;
 		while(window.pollEvent(event))
 		{
@@ -128,6 +133,7 @@ int main(void) {
 			//if (event.type = sf::Event::MouseButtonPressed)
 			// implementation of blocktree.update();
 		}
+		mainTree.updateGame(time);
 
 		window.clear(lightblue);
 		mainTree.drawTree(window, state);

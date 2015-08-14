@@ -19,6 +19,8 @@ public:
 
 	Type type;
 	int id;
+	float drop(sf::Time time);
+	int id_dropped;
 
 protected:
 	

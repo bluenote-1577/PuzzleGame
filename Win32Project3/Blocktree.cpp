@@ -29,8 +29,8 @@ void Blocktree:: drawTree(sf::RenderTarget& window, sf::RenderStates state)
 void Blocktree::clickOccur(sf::RenderWindow& window, sf:: Text& text, const sf::FloatRect& reset)
 {
 	sf:: FloatRect bounds;
-	//sf::FloatRect gamebounds(240.0,140.0,120.0,160.0) ;
-	sf::FloatRect gamebounds(0,0,600,600);
+	sf::FloatRect gamebounds(240.0,140.0,120.0,160.0) ;
+	//sf::FloatRect gamebounds(0,0,600,600);
 	sf:: Vector2i initial = sf::Mouse::getPosition(window);
 	sf:: Vector2f position = window.mapPixelToCoords(initial);
 
@@ -48,7 +48,7 @@ void Blocktree::clickOccur(sf::RenderWindow& window, sf:: Text& text, const sf::
 			bounds = (*dude).blockSprite.getGlobalBounds();
 			if (bounds.contains(pos_x,pos_y)){
 				
-				score = (*dude).id;
+				//score = (*dude).id;
 				int idcheck = (*dude).id; //blocks are id'd in a matrix accordingly:
 										// 3 7 11
 										// 2 6 10
@@ -74,13 +74,14 @@ void Blocktree::clickOccur(sf::RenderWindow& window, sf:: Text& text, const sf::
 			//	if (column==true && row== true)
 			//	{
 			//	}
+				 if(row == true)
+					eraserow(idcheck);
 
-				 if(column==true){
+				 else if(column==true){
 					erasecolumn(idcheck);
 					}
 
-				 if(row == true)
-					eraserow(id_row);
+				
 				break;
 			}
 
@@ -124,7 +125,7 @@ void Blocktree:: initializeTree (const sf::Texture& Pink, const sf::Texture& Tea
 		for ( int i = 0; 12>i; i++)
 		{
 		int random = rand()%3;
-		//int random = 1;
+	//	int random = ;
 		// use above for testing
 			
 		if (random == 0){
@@ -162,34 +163,38 @@ void Blocktree:: initializeTree (const sf::Texture& Pink, const sf::Texture& Tea
 	row_is_full[1] = true;
 	row_is_full[2] = true;
 	row_is_full[3] = true;
+	finished_updating = false;
 	updateScan();
 
 }
 
-void Blocktree::eraserow(int id_row){
+void Blocktree::eraserow(int id_dude){
 
 
-	score++;
+	//score++;
 
-	for(col::iterator it = matrix[0].erase(matrix[0].begin()+id_row); it !=matrix[0].end(); it++)
+	for(col::iterator it = matrix[0].erase(matrix[0].begin()+id_dude % 4 ); it !=matrix[0].end(); it++)
 	{		
 		(*it)->id--;
+		(*it) -> id_dropped++;
 	}
-	for(col::iterator it = matrix[1].erase(matrix[1].begin()+id_row); it !=matrix[1].end(); it++)
+	for(col::iterator it = matrix[1].erase(matrix[1].begin()+id_dude % 4); it !=matrix[1].end(); it++)
 	{		
 		(*it)->id--;
+		(*it) -> id_dropped++;
 	}
-	for(col::iterator it = matrix[2].erase(matrix[2].begin()+id_row); it !=matrix[2].end(); it++)
+	for(col::iterator it = matrix[2].erase(matrix[2].begin()+id_dude % 4); it !=matrix[2].end(); it++)
 	{
-		(*it)->id--;			
+		(*it)->id--;		
+		(*it) -> id_dropped++;
 	}
 
-	for(col& column : matrix)
-		for(auto& block : column)
-			(*block).setOrigin();
+	//for(col& column : matrix)
+	//	for(auto& block : column)
+		//	(*block).id_dropped = 1;
 					
 	colsize[0]--,colsize[1]--,colsize[2]--;
-	
+	finished_updating = false;
 	updateScan();
 
 
@@ -197,7 +202,7 @@ void Blocktree::eraserow(int id_row){
 
 void Blocktree::erasecolumn(int block_id){
 
-	score++;
+	//score++;
 
 	int id_col = block_id / 4;
 	int id_row = block_id % 4;
@@ -215,23 +220,21 @@ void Blocktree::erasecolumn(int block_id){
 		}
 	}
 
-	for(auto it = it_first; ((it->type != (*matrix[id_col][id_row]).type) || (next(it) != column_ids[id_col].end())); it++){
-		it_last = it;
+	for(auto it = it_first; (it != column_ids[id_col].end()); it++){
+		id_second = it->id;
 	}
 
-	it_last++;
 
-	id_second = it_last->id;
 
-	score = id_second;
+	int id_drop = (id_second - id_first + 1);
+	
 
-	for(auto it = matrix[id_col].erase(matrix[id_col].begin()+(id_first%4), matrix[id_col].begin()+(id_second%4)+1); it != matrix[id_col].end(); it++)
-		(*it)->id -= (id_second - id_first + 1) ;
+	for(auto it = matrix[id_col].erase(matrix[id_col].begin()+(id_first%4), matrix[id_col].begin()+(id_second%4)+1); it != matrix[id_col].end(); it++){
+		(*it)->id -= id_drop ;
+		(*it)->id_dropped = id_drop;
+	}
 
-	for(auto it = matrix[id_col].begin(); it != matrix[id_col].end(); it++)
-		(*it)->setOrigin();
-
-	colsize[id_col] = id - (id_second - id_first) - 1 ;
+	colsize[id_col] -= id_drop;
 	updateScan();
 }
 
@@ -285,7 +288,7 @@ void Blocktree:: scancolumn()
 
 		if (pinkmax >= 3)
 		{
-			for( int max = pinkmax+pinkid; max + i*4 > pinkid ; pinkid++){
+			for( int max = pinkmax+(pinkid%4); max + i*4 > pinkid ; pinkid++){
 
 				std::unique_ptr<columnholder> hold(new columnholder(pinkid,Type::Pink));
 				bool isinside = false;
@@ -304,7 +307,7 @@ void Blocktree:: scancolumn()
 
 		 if (greenmax >= 3)
 		{
-			for( int max = greenmax+greenid; max+i*4 > (greenid) ; greenid++){
+			for( int max = greenmax+(greenid%4); max+i*4 > (greenid) ; greenid++){
 
 			std::unique_ptr<columnholder> hold(new columnholder(greenid,Type:: Green));
 			bool isinside = false;
@@ -320,7 +323,7 @@ void Blocktree:: scancolumn()
 		}
 		 if(tealmax>= 3)
 		{
-			for( int max = tealmax+tealid; max+i*4 > (tealid) ; tealid++){
+			for( int max = tealmax+(tealid%4); max+i*4 > (tealid) ; tealid++){
 
 				std::unique_ptr<columnholder> hold(new columnholder(tealid,Type::Teal));
 				bool isinside = false;
@@ -402,4 +405,25 @@ bool Blocktree:: findid(int idcol, int idcheck)
 	return isinside;
 
 
+}
+
+void Blocktree::  updateGame(sf:: Time time)
+
+{
+	if (finished_updating == true)
+		return;
+
+	for( auto& column : matrix)
+		for ( auto& elements : column){
+
+		if	((*elements).drop(time) >(*elements).id_dropped*40){
+			
+			(*elements).id_dropped = 0;
+			}
+
+		if((*elements).id_dropped == 0){
+			(*elements).blockSprite.setPosition(0.0f,0.0f);
+			(*elements).setOrigin();
+			}
+		}
 }
