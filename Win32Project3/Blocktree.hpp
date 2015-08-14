@@ -8,6 +8,7 @@
 #include "Includer.hpp"
 #include <list>
 #include <unordered_set>
+#include <utility>
 
 class Blocktree : public Block{
 
@@ -23,7 +24,23 @@ public:
 
 private:
 
-	typedef std::vector<Block> col;
+	struct columnholder{
+
+		int id;
+		Type type;
+		columnholder()
+		{
+		}
+		columnholder(int id, Type type){
+
+			this->id = id;
+			this->type = type;
+
+		}
+	};
+
+	typedef std::vector<columnholder> column_vector;
+	typedef std::vector<std::unique_ptr<Block>> col;
 	std::vector<col> matrix;
 	sf:: Texture Pink;
 	sf:: Texture Green;
@@ -40,8 +57,10 @@ private:
 	
 	void scancolumn();
 	void scanrow();
-	std::unordered_set<int> column_ids;
+	std::vector <std::vector<columnholder>> column_ids;
 	std::unordered_set<int> row_ids;
+
+	bool findid(int idcol, int idcheck);
 
 
 

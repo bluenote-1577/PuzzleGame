@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
+
 /**int main()
 {
 
@@ -115,12 +116,13 @@ int main(void) {
 
 		s = std::to_string(mainTree.score);
 		score.setString(s);
-		mainTree.updateScan();
+		
 		sf::Event event;
 		while(window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
+
 			if(event.type == sf::Event::MouseButtonPressed)
 				mainTree.clickOccur(window,display,reset_bounds);
 			//if (event.type = sf::Event::MouseButtonPressed)
