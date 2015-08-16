@@ -18,11 +18,15 @@ public:
 	Blocktree();
 	void drawTree(sf::RenderTarget& window, sf::RenderStates state);
 	int score;
-	void clickOccur(sf::RenderWindow& window,sf::Text& text, const sf::FloatRect& reset);
+	void clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset);
 	void updateScan();
 	void clearScan();
-
+	int clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& reset);
 	void updateGame(sf::Time time);
+	static	const int column_length = 7;
+	void swap_colours (int id1, int id2);
+	void draw_select(int id1, int id2, sf::RenderWindow& window, sf::RenderStates state);
+
 
 private:
 
@@ -47,12 +51,17 @@ private:
 	sf:: Texture Pink;
 	sf:: Texture Green;
 	sf:: Texture Teal;
+	sf:: Texture Pink_select;
+	sf:: Texture Green_select;
+	sf:: Texture Teal_select;
 
-	bool row_is_full[4];
+	bool row_is_full[column_length];
 	int colsize[3];
 
 	void initializeTree(const sf::Texture& colour1,const 
-		sf::Texture& colour2,const sf::Texture& colour3);
+		sf::Texture& colour2,const sf::Texture& colour3,
+		const sf::Texture& colour1_select, const sf::Texture& colour2_select,
+		const sf::Texture& colour3_select);
 
 	void eraserow(int idmap_row);
 	void erasecolumn(int idmap_column);
@@ -65,7 +74,7 @@ private:
 	bool findid(int idcol, int idcheck);
 
 	bool finished_updating;
-
+	void setType(int id);
 }
 
 ;

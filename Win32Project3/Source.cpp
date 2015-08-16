@@ -6,6 +6,7 @@
 #define CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#include <thread>
 
 
 /**int main()
@@ -112,14 +113,13 @@ int main(void) {
 	sf::FloatRect reset_bounds = reset_button.getGlobalBounds();
 	sf::Clock clock;
 	sf:: Time time;
-
+	
 	while (window.isOpen())
 	{
 	
 		time = clock.restart();
 		s = std::to_string(mainTree.score);
 		score.setString(s);
-		
 
 
 		sf::Event event;
@@ -129,9 +129,31 @@ int main(void) {
 				window.close();
 
 			if(event.type == sf::Event::MouseButtonPressed)
-				mainTree.clickOccur(window,display,reset_bounds);
-			//if (event.type = sf::Event::MouseButtonPressed)
-			// implementation of blocktree.update();
+				
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+				mainTree.clickOccur_clear(window,reset_bounds);
+			
+				else { if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+					int id_to_swap = mainTree.clickOccur_swap(window,reset_bounds);
+					
+					
+					int id_to_swap2;
+
+				
+					while (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						mainTree.drawTree(window,state);
+						id_to_swap2 = mainTree.clickOccur_swap(window,reset_bounds);
+						if (id_to_swap != -1 || id_to_swap != -1)
+							mainTree.draw_select(id_to_swap,id_to_swap2,window,state);
+						window.display();
+							
+					}
+					
+					mainTree.swap_colours(id_to_swap,id_to_swap2);
+					mainTree.score = id_to_swap;
+					}
+				}
 		}
 		mainTree.updateGame(time);
 
@@ -141,6 +163,7 @@ int main(void) {
 		window.draw(score);
 		window.draw(reset_button);
 		window.draw(reset);
+	//	mainTree.block(5).draw_select(window,state);
 		window.display();
 	}
 
