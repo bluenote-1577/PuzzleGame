@@ -9,65 +9,6 @@
 #include <thread>
 
 
-/**int main()
-{
-
-	sf:: Texture texture[3];
-	sf::RenderStates state;
-	texture[0].loadFromFile("C:/Users/Owner/Desktop/Buttons/GJ_button_03.png");//pink
-	texture[1].loadFromFile("C:/Users/Owner/Desktop/Buttons/GJ_button_02.png");//teal
-	texture[2].loadFromFile("C:/Users/Owner/Desktop/Buttons/GJ_button_01.png");//green
-
-	
-	
-	sf::RenderWindow window(sf::VideoMode (600,400), "My Window");
-	Block newBlock(texture[1]);
-	
-	sf:: Sprite block[9];
-	 srand(time(NULL));
-	for( int i = 0; 3>i; i++){
-
-		float ypos = (float)(-180-i*40);
-
-		for ( int b = 0; 3>b; b++)
-		{
-		int random = rand() % 3;
-
-		if (random == 0)
-			block[b+ i*3].setTexture(texture[0]);
-		if (random == 1)
-			block[b+ i*3].setTexture(texture[1]);
-		if (random == 2)
-			block[b+i*3].setTexture(texture[2]);
-
-		float xpos = (float)(-240-b*40);
-	
-
-		block[b+i*3].setOrigin(xpos,ypos);
-		}
-	}
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while(window.pollEvent(event))
-		{
-			if (event.type = sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		for(int i = 0; i<9; i++)
-			window.draw(block[i]);
-		window.draw(newBlock);
-		window.display();
-		
-		
-	}
-
-
-
-}**/
-
 
 int main(void) {
 
@@ -76,7 +17,7 @@ int main(void) {
 	window.setFramerateLimit(60);
 	sf::RenderStates state;
 
-	Blocktree mainTree;
+	
 	sf:: Color lightblue(230,230,250,0);
 	sf::Font main_font;
 	
@@ -84,6 +25,7 @@ int main(void) {
 	sf::Text display;
 	sf::Text score;
 	sf::Text reset;
+	sf::Text gamestatus;
 
 	std::string s;
 	display.setFont(main_font);
@@ -92,7 +34,10 @@ int main(void) {
 	display.setString("Your score :");
 	display.setStyle(0);
 
-	
+	gamestatus.setFont(main_font);
+	gamestatus.setPosition(60,200);
+	gamestatus.setColor(sf::Color::Black);
+	gamestatus.setStyle(0);
 
 	score.setFont(main_font);
 	score.setPosition(50.0,80.0);
@@ -112,11 +57,14 @@ int main(void) {
 	reset_button.setFillColor(sf::Color::White);
 	sf::FloatRect reset_bounds = reset_button.getGlobalBounds();
 	sf::Clock clock;
+	sf::Clock drop_clock;
 	sf:: Time time;
+	sf:: Time drop_time;
+	Blocktree mainTree;
+	int drops = 0;
 	
 	while (window.isOpen())
 	{
-	
 		time = clock.restart();
 		s = std::to_string(mainTree.score);
 		score.setString(s);
@@ -125,14 +73,15 @@ int main(void) {
 		sf::Event event;
 		while(window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed )
 				window.close();
 
-			if(event.type == sf::Event::MouseButtonPressed)
+			if(event.type == sf::Event::MouseButtonPressed && mainTree.is_game_over() != true)
 				
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
+
 				mainTree.clickOccur_clear(window,reset_bounds);
-			
+				}
 				else { if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 					int id_to_swap = mainTree.clickOccur_swap(window,reset_bounds);
 					
@@ -142,29 +91,68 @@ int main(void) {
 				
 					while (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 					{
+
+						time = clock.restart();
+						s = std::to_string(mainTree.score);
+						score.setString(s);
+
+						mainTree.updateGame_blocks(time);
+						//if( mainTree.updateGame_drop(drop_clock.getElapsedTime(), drops) == true)
+						//	drop_clock.restart();
+						window.clear(lightblue);
+						mainTree.drawTree(window, state);
+						window.draw(display);
+						window.draw(score);
+						window.draw(reset_button);
+						window.draw(reset);
+						window.draw(gamestatus);
 						mainTree.drawTree(window,state);
 						id_to_swap2 = mainTree.clickOccur_swap(window,reset_bounds);
-						if (id_to_swap != -1 || id_to_swap != -1)
+						if (mainTree.is_game_over() == true)
+							goto ifGameEnds;
+						if (id_to_swap != -1 && id_to_swap2 != -1)
 							mainTree.draw_select(id_to_swap,id_to_swap2,window,state);
 						window.display();
+
 							
 					}
 					
-					mainTree.swap_colours(id_to_swap,id_to_swap2);
-					mainTree.score = id_to_swap;
+					if(mainTree.swap_colours(id_to_swap,id_to_swap2) == 0)
+						gamestatus.setString("Invalid swap!");
+					else gamestatus.setString("");
+
 					}
 				}
+			if (event.type == sf::Event::MouseButtonPressed && mainTree.is_game_over() == true){
+				gamestatus.setString("");
+				mainTree.gameover_reset(window,reset_bounds);
+			}
 		}
-		mainTree.updateGame(time);
 
+		ifGameEnds:
+		mainTree.updateGame_blocks(time);
+		if( mainTree.updateGame_drop(drop_clock.getElapsedTime(), drops) == true)
+			drop_clock.restart();
 		window.clear(lightblue);
 		mainTree.drawTree(window, state);
 		window.draw(display);
 		window.draw(score);
 		window.draw(reset_button);
 		window.draw(reset);
-	//	mainTree.block(5).draw_select(window,state);
-		window.display();
+		window.draw(gamestatus);
+		if (mainTree.is_game_over() == true){
+			gamestatus.setString("You lost!\n Click reset\n to start again");
+			window.display();
+			clock.restart();
+			sf:: Time wait = sf::seconds(1.0f);
+			
+		
+			
+		}
+	
+		else window.display();
+
 	}
 
 }
+

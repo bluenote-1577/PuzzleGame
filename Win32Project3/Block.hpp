@@ -24,7 +24,7 @@ public:
 	int id;
 	float drop(sf::Time time);
 	int id_dropped;
-	static const int column_length = 7;
+	static const int column_length = 10;
 
 protected:
 	

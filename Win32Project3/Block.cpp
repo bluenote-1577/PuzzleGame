@@ -30,7 +30,7 @@ void Block:: setOrigin()
 {
 
 		float xpos = (float)(-240-40*(this->id/column_length));
-		float ypos = (float)(-340+40*(this->id%column_length));
+		float ypos = (float)(-360+40*(this->id%column_length));
 	blockSprite.setOrigin(xpos,ypos);
 	select_blockSprite.setOrigin(xpos,ypos);
 
