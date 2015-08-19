@@ -39,12 +39,13 @@ void Blocktree:: drawTree(sf::RenderTarget& window, sf::RenderStates state)
 
 }
 
-void Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset)
+bool Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset)
 {
 
 	if (game_over == true)
-		return;
+		return false;
 	
+	bool is_success = false;
 	sf::FloatRect invisible_testing(0,0,50,50);
 	sf:: FloatRect bounds;
 	sf::FloatRect gamebounds(240.0,0,120,400) ;
@@ -92,11 +93,14 @@ void Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& 
 			//	if (column==true && row== true)
 			//	{
 			//	}
-				 if(row == true && sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+				 if(row == true && sf::Keyboard::isKeyPressed(sf::Keyboard::R)){
 					eraserow(idcheck);
+					is_success = true;
+				 }
 
 				 else if(column==true && sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
 					erasecolumn(idcheck);
+					is_success = true;
 					}
 
 				
@@ -105,21 +109,14 @@ void Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& 
 
 		}
 
-
+	return is_success;
 	}
 
 
-	if (reset.contains(pos_x,pos_y)){
-		for(auto& bro : matrix)
-			bro.clear();
-
-		initializeTree(Pink,Teal,Green, Pink_select, Teal_select, Green_select);
-		
-	}
 
 		if (invisible_testing.contains(pos_x,pos_y)){
 		dropRow();
-	
+		return false;
 	}
 	
 }
@@ -141,7 +138,7 @@ void Blocktree:: initializeTree (const sf::Texture& Pink, const sf::Texture& Tea
 {
 
 	
-	const int initialLength = 7;
+	const int initialLength = 5;
 		
 		
 
@@ -184,10 +181,11 @@ void Blocktree:: initializeTree (const sf::Texture& Pink, const sf::Texture& Tea
 
 	score = 0;
 	colsize[0]=matrix[0].size(),colsize[1] =matrix[1].size(),colsize[2] = matrix[2].size(); 
+	combo_count = 1;
 	finished_updating = false;
 	game_over = false;
 	updateScan();
-
+	
 }
 
 void Blocktree::eraserow(int id_dude){
@@ -217,6 +215,9 @@ void Blocktree::eraserow(int id_dude){
 					
 	colsize[0]--,colsize[1]--,colsize[2]--;
 	finished_updating = false;
+	score+= 3 * combo_count;
+	last_score = 3* combo_count;
+	combo_count++;
 	updateScan();
 
 
@@ -230,27 +231,34 @@ void Blocktree::erasecolumn(int block_id){
 	int id_row = block_id % column_length;
 	int id_first;
 	int id_second;
-	auto it_first = column_ids[id_col].begin();
-	auto it_last = column_ids[id_col].begin();
+	auto it_first = column_ids[id_col][0].begin();
+	auto it_last = column_ids[id_col][0].begin();
+	int maxsize;
+	int number_blocks_erased=0;
+
+	for (auto& column : column_ids)
+		for (auto & containers : column)
+			for( auto it = containers.begin(); it != containers.end(); it++)
+				if ((*matrix[id_col][id_row]).type == it->type){
+					id_first = it->id;
+					it_first = it;
+					maxsize = containers.size();
+					goto after;
+				}
+
+			
 
 
-	for(auto it = column_ids[id_col].begin(); it != column_ids[id_col].end(); it++){
-		if ((*matrix[id_col][id_row]).type == it->type){
-			id_first = it->id;
-			it_first = it;
-			break;
-		}
-	}
-
-	for(auto it = it_first; (it != column_ids[id_col].end() && it->type ==it_first->type); it++){
-		id_second = it->id;
-	}
-
-
-
+after:
+	it_last = it_first + maxsize - 1;
+	id_second = it_last ->id;
 	int id_drop = (id_second - id_first + 1);
 	
-
+	for(auto it = matrix[id_col].begin()+id_first%column_length; it != matrix[id_col].begin()+id_second%column_length+1; it++){
+		number_blocks_erased++;
+		if ((*it)->id_dropped != 0)
+			return;
+	}
 	for(auto it = matrix[id_col].erase(matrix[id_col].begin()+(id_first%column_length), matrix[id_col].begin()+(id_second%column_length)+1); it != matrix[id_col].end(); it++){
 		(*it)->id -= id_drop ;
 		(*it)->id_dropped += id_drop;
@@ -258,6 +266,9 @@ void Blocktree::erasecolumn(int block_id){
 
 	colsize[id_col] -= id_drop;
 	updateScan();
+	score += number_blocks_erased * combo_count;
+	last_score = number_blocks_erased * combo_count;
+	combo_count++;
 }
 
 
@@ -429,9 +440,11 @@ bool Blocktree:: findid(int idcol, int idcheck)
 	bool isinside = false;
 
 	for (auto& columns : column_ids)
-			for(auto it = columns.begin(); it != columns.end(); it++)
-				if (it->id == idcheck)
-					return true;
+			for(auto &containers : columns)
+				for(auto it = containers.begin(); it!= containers.end(); it++)
+					if (it->id ==idcheck )
+						return true;
+				
 				
 				
 		
@@ -489,7 +502,7 @@ int Blocktree:: clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& re
 			bro.clear();
 
 		initializeTree(Pink,Teal,Green, Pink_select, Teal_select, Green_select);
-		return -1;
+		return -2;
 		
 	}
 	
@@ -514,7 +527,7 @@ int Blocktree:: clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& re
 int Blocktree :: swap_colours(int id1, int id2)
 {
 
-	if(id1 == -1 || id2 == -1 )
+	if(id1 <0 || id2 < 0 )
 		return -1;
 
 	bool valid_move = false;
@@ -544,6 +557,8 @@ int Blocktree :: swap_colours(int id1, int id2)
 
 	setType(id1);
 	setType(id2);
+
+	combo_count = 1;
 
 	updateScan();
 	return 1;
@@ -685,7 +700,7 @@ bool Blocktree :: updateGame_drop( sf::Time drop_time,int& count)
 	if(game_over == true)
 		return false;
 
-	float timer = 3;
+	float timer = 1/((.67/30)*count+.33);
 	float time = drop_time.asSeconds();
 	int timecast = static_cast<int>(time);
 
@@ -777,8 +792,12 @@ void Blocktree:: scancolumn_new()
 			}
 
 		}
+
+
 			for( int c = 0; c<maxOccur; c++)
 			{
+			std::unique_ptr <std::vector<columnholder>> ptr_to_vector (new std::vector <columnholder>);
+
 				if (pinkmax[c] < 3) break;
 				for( int max = pinkmax[c]+(pinkid[c]%column_length); max + i*column_length > pinkid[c] ; pinkid[c]++){
 
@@ -787,14 +806,17 @@ void Blocktree:: scancolumn_new()
 					
 
 					if (isinside != true)
-						column_ids[i].push_back(std::move(*hold));
+						(*ptr_to_vector).push_back(std::move(*hold));
 				}
-			
+
+
+				column_ids[i].push_back(std::move(*ptr_to_vector));
 
 			}
 		
 			for( int c = 0; c<maxOccur; c++)
 			{
+				std::unique_ptr <std::vector<columnholder>> ptr_to_vector (new std::vector <columnholder>);
 				if (greenmax[c] < 3) break;
 				for( int max = greenmax[c]+(greenid[c]%column_length); max + i*column_length > greenid[c] ; greenid[c]++){
 
@@ -803,13 +825,14 @@ void Blocktree:: scancolumn_new()
 					
 
 					if (isinside != true)
-						column_ids[i].push_back(std::move(*hold));
+						(*ptr_to_vector).push_back(std::move(*hold));
 				}
-			
+				column_ids[i].push_back(std::move(*ptr_to_vector));
 			}
 	
 			for( int c = 0; c<maxOccur; c++)
 			{
+				std::unique_ptr <std::vector<columnholder>> ptr_to_vector (new std::vector <columnholder>);
 				if (tealmax[c] < 3) break;
 				for( int max = tealmax[c]+(tealid[c]%column_length); max + i*column_length > tealid[c] ; tealid[c]++){
 
@@ -818,9 +841,10 @@ void Blocktree:: scancolumn_new()
 					
 
 					if (isinside != true)
-						column_ids[i].push_back(std::move(*hold));
+						(*ptr_to_vector).push_back(std::move(*hold));
 				}
 			
+				column_ids[i].push_back(std::move(*ptr_to_vector));
 			}
 	}
 		

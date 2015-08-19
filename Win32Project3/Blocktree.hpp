@@ -21,10 +21,12 @@ public:
 	int score;
 	int clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& reset);
 	bool is_game_over();
+	int combo_count;
+	int last_score;
 	//functions
 
 	void drawTree(sf::RenderTarget& window, sf::RenderStates state);
-	void clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset);
+	bool clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset);
 	void updateScan();
 	void clearScan();
 	void updateGame_blocks(sf::Time time);
@@ -52,7 +54,6 @@ private:
 		}
 	};
 	//typedef <std::vector<columnholder>> column_vector;
-	typedef std::vector<std::vector<columnholder>> column_vector;
 	typedef std::vector<std::unique_ptr<Block>> col;
 	std::vector<col> matrix;
 	sf:: Texture Pink;
@@ -63,7 +64,7 @@ private:
 	sf:: Texture Teal_select;
 	bool row_is_full[column_length];
 	int colsize[3];
-	std::vector <std::vector<columnholder>> column_ids;
+	std::vector <std::vector<std::vector<columnholder>>> column_ids;
 	std::unordered_set<int> row_ids;
 	bool findid(int idcol, int idcheck);
 	bool finished_updating;

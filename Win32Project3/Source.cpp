@@ -26,21 +26,24 @@ int main(void) {
 	sf::Text score;
 	sf::Text reset;
 	sf::Text gamestatus;
+	sf::Text combo_display;
 
 	std::string s;
+	std::string combo_update = "0";
+	std::string score_update;
 	display.setFont(main_font);
-	display.setPosition(50.0,50.0);
+	display.setPosition(50.0,60);
 	display.setColor(sf::Color::Black);
-	display.setString("Your score :");
+	display.setString("Score");
 	display.setStyle(0);
 
 	gamestatus.setFont(main_font);
-	gamestatus.setPosition(60,200);
+	gamestatus.setPosition(50,200);
 	gamestatus.setColor(sf::Color::Black);
 	gamestatus.setStyle(0);
 
 	score.setFont(main_font);
-	score.setPosition(50.0,80.0);
+	score.setPosition(50.0,95);
 	score.setColor(sf::Color::Black);
 	score.setStyle(0);
 
@@ -49,6 +52,12 @@ int main(void) {
 	reset.setColor(sf::Color::Black);
 	reset.setString("Reset");
 	reset.setStyle(0);
+
+	combo_display.setFont(main_font);
+	combo_display.setPosition(50.0,20);
+	combo_display.setColor(sf::Color::Black);
+	combo_display.setStyle(0);
+	combo_display.setString("Combo : 0");
 
 	sf::RectangleShape reset_button(sf::Vector2f(50.0,40.0));
 	reset_button.setOrigin(-440.0,-90.0);
@@ -63,12 +72,14 @@ int main(void) {
 	Blocktree mainTree;
 	int drops = 0;
 	
+	
+	
 	while (window.isOpen())
 	{
 		time = clock.restart();
 		s = std::to_string(mainTree.score);
 		score.setString(s);
-
+		
 
 		sf::Event event;
 		while(window.pollEvent(event))
@@ -80,7 +91,13 @@ int main(void) {
 				
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
 
-				mainTree.clickOccur_clear(window,reset_bounds);
+				if(mainTree.clickOccur_clear(window,reset_bounds)){
+				
+				combo_update = std::to_string(mainTree.combo_count - 1);
+				score_update = std::to_string(mainTree.last_score);
+				gamestatus.setString( "+ " + score_update + "points!");
+				}
+				
 				}
 				else { if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 					int id_to_swap = mainTree.clickOccur_swap(window,reset_bounds);
@@ -102,6 +119,7 @@ int main(void) {
 						window.clear(lightblue);
 						mainTree.drawTree(window, state);
 						window.draw(display);
+						window.draw(combo_display);
 						window.draw(score);
 						window.draw(reset_button);
 						window.draw(reset);
@@ -110,8 +128,15 @@ int main(void) {
 						id_to_swap2 = mainTree.clickOccur_swap(window,reset_bounds);
 						if (mainTree.is_game_over() == true)
 							goto ifGameEnds;
-						if (id_to_swap != -1 && id_to_swap2 != -1)
+
+						if(id_to_swap == -2 || id_to_swap2 == -2){
+							clock.restart();
+							drops = 0;
+						}
+
+						else if (id_to_swap >0 && id_to_swap2 >0)
 							mainTree.draw_select(id_to_swap,id_to_swap2,window,state);
+						combo_display.setString("Combo : " + combo_update);
 						window.display();
 
 							
@@ -119,7 +144,8 @@ int main(void) {
 					
 					if(mainTree.swap_colours(id_to_swap,id_to_swap2) == 0)
 						gamestatus.setString("Invalid swap!");
-					else gamestatus.setString("");
+					else {gamestatus.setString("");
+						combo_update = std::to_string(mainTree.combo_count - 1);}
 
 					}
 				}
@@ -140,11 +166,13 @@ int main(void) {
 		window.draw(reset_button);
 		window.draw(reset);
 		window.draw(gamestatus);
+		combo_display.setString("Combo : " + combo_update);
+		window.draw(combo_display);
 		if (mainTree.is_game_over() == true){
 			gamestatus.setString("You lost!\n Click reset\n to start again");
+			drops = 0;
 			window.display();
 			clock.restart();
-			sf:: Time wait = sf::seconds(1.0f);
 			
 		
 			
