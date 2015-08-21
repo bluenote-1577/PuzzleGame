@@ -9,6 +9,7 @@
 #include <list>
 #include <unordered_set>
 #include <utility>
+#include <cmath>
 
 class Blocktree : public Block{
 

@@ -239,9 +239,10 @@ void Blocktree::erasecolumn(int block_id){
 	for (auto& column : column_ids)
 		for (auto & containers : column)
 			for( auto it = containers.begin(); it != containers.end(); it++)
-				if ((*matrix[id_col][id_row]).type == it->type){
-					id_first = it->id;
-					it_first = it;
+				if ((*matrix[id_col][id_row]).id == it->id){
+					it_first = containers.begin();
+					id_first = it_first->id;
+				
 					maxsize = containers.size();
 					goto after;
 				}
@@ -461,7 +462,7 @@ void Blocktree::  updateGame_blocks(sf:: Time time)
 
 {
 
-
+	updateScan();
 	for( auto& column : matrix)
 		for ( auto& elements : column){
 
@@ -700,7 +701,7 @@ bool Blocktree :: updateGame_drop( sf::Time drop_time,int& count)
 	if(game_over == true)
 		return false;
 
-	float timer = 1/((.67/30)*count+.33);
+	float timer = (2/log10(count));
 	float time = drop_time.asSeconds();
 	int timecast = static_cast<int>(time);
 
@@ -717,7 +718,7 @@ bool Blocktree :: updateGame_drop( sf::Time drop_time,int& count)
 void Blocktree:: scancolumn_new()
 {
 	int num_col = 3;
-	static const int maxOccur = column_length/4;
+	static const int maxOccur = (column_length/4);
 
 	for(int i = 0; i<num_col; i++)
 	{
@@ -735,17 +736,19 @@ void Blocktree:: scancolumn_new()
 
 		for( int b = 0; b< matrix[i].size(); b++)
 		{
-			if ((*matrix[i][b]).type == Type::Pink){
+			if ((*matrix[i][b]).type == Type::Pink && (*matrix[i][b]).id_dropped == 0){
 
 				pinkcount++;	
 				if (pinkid[colour_occur[0]]==-1) pinkid[colour_occur[0]] = b+i*column_length;
 				if (pinkcount > pinkmax[colour_occur[0]]) pinkmax[colour_occur[0]] = pinkcount;
 				
-				if (tealmax[colour_occur[2]] >= 3)
-					colour_occur[2]++;
+				if (tealmax[colour_occur[2]] >= 3){
+					if(colour_occur[2] < (maxOccur-1))
+						colour_occur[2]++;}
 				else tealid[colour_occur[2]] = -1;
-				if (greenmax[colour_occur[1]] >= 3)
-					colour_occur[1]++;
+				if (greenmax[colour_occur[1]] >= 3 ){
+					if(colour_occur[1] < (maxOccur-1))
+						colour_occur[1]++;}
 				else greenid[colour_occur[1]] = -1;
 
 				tealcount = 0;
@@ -754,17 +757,19 @@ void Blocktree:: scancolumn_new()
 			}
 
 			else 
-				if ((*matrix[i][b]).type == Type::Green){
+				if ((*matrix[i][b]).type == Type::Green && (*matrix[i][b]).id_dropped == 0){
 
 				greencount++;	
 				if (greenid[colour_occur[1]]==-1) greenid[colour_occur[1]] = b+i*column_length;
 				if (greencount > greenmax[colour_occur[1]]) greenmax[colour_occur[1]] = greencount;
 				
-				if (tealmax[colour_occur[2]] >= 3)
-					colour_occur[2]++;
+				if (tealmax[colour_occur[2]] >= 3 ){
+					if(colour_occur[2] < (maxOccur-1))
+						colour_occur[2]++;}
 				else tealid[colour_occur[2]] = -1;
-				if (pinkmax[colour_occur[0]] >= 3)
-					colour_occur[0]++;
+				if (pinkmax[colour_occur[0]] >= 3 ){
+					if(colour_occur[0] < (maxOccur-1))
+						colour_occur[0]++;}
 				else pinkid[colour_occur[0]] = -1;
 
 				tealcount = 0;
@@ -772,18 +777,20 @@ void Blocktree:: scancolumn_new()
 			}
 
 			else 
-				if ((*matrix[i][b]).type == Type::Teal){
+				if ((*matrix[i][b]).type == Type::Teal && (*matrix[i][b]).id_dropped == 0){
 				tealcount++;	
 				if (tealid[colour_occur[2]]==-1) tealid[colour_occur[2]] = b+i*column_length;
 				if (tealcount > tealmax[colour_occur[2]]) tealmax[colour_occur[2]] = tealcount;
 				
 
 				
-				if (pinkmax[colour_occur[0]] >= 3)
-					colour_occur[0]++;
+				if (pinkmax[colour_occur[0]] >= 3 ){
+					if(colour_occur[0] < (maxOccur-1))
+						colour_occur[0]++;}
 				else pinkid[colour_occur[0]] = -1;
-				if (greenmax[colour_occur[1]] >= 3)
-					colour_occur[1]++;
+				if (greenmax[colour_occur[1]] >= 3 ){
+					if(colour_occur[1] < (maxOccur-1))
+						colour_occur[1]++;}
 				else greenid[colour_occur[1]] = -1;
 
 				pinkcount = 0;

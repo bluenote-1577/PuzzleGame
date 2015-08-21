@@ -13,12 +13,16 @@
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blocktree.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="TimedResourceHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.hpp" />
     <ClInclude Include="Blocktree.hpp" />
     <ClInclude Include="Includer.hpp" />
+    <ClInclude Include="MainMenu.hpp" />
+    <ClInclude Include="TimedResourceHolder.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C07EFC80-0746-44F1-9B53-64798AADDB13}</ProjectGuid>
