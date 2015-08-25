@@ -21,12 +21,12 @@ int main(void) {
 	sf:: Color lightblue(230,230,250,0);
 	TimedResourceHolder timed_resources;
 	sf::FloatRect reset_bounds = timed_resources.reset_button.getGlobalBounds();
+	sf::FloatRect menu_bounds = timed_resources.menu_button.getGlobalBounds();
 	sf::Clock clock;
 	sf::Clock drop_clock;
 	sf:: Time time;
 	sf:: Time drop_time;
 	Blocktree mainTree;
-	int drops = 2;
 	MainMenu mainmenu;
 	
 	
@@ -44,14 +44,13 @@ int main(void) {
 			}
 			window.clear(lightblue);
 			mainmenu.drawScreen(window);
-			window.display();
 			drop_clock.restart();
+			window.display();
 		}
 		
 		
 		// everything below is timed puzzle game
 		time = clock.restart();
-		
 		timed_resources.changeScore(mainTree.score);
 
 		
@@ -63,7 +62,7 @@ int main(void) {
 			if(event.type == sf::Event::MouseButtonPressed && mainTree.is_game_over() != true)
 				
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
-					if(mainTree.clickOccur_clear(window,reset_bounds)){
+					if(mainTree.clickOccur_clear(window,reset_bounds, menu_bounds, mainmenu)){
 						timed_resources.changeComboUpdate(mainTree.combo_count-1);
 						timed_resources.changeScoreUpdate(mainTree.last_score);
 					}
@@ -72,7 +71,7 @@ int main(void) {
 				else { 
 					
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-						int id_to_swap = mainTree.clickOccur_swap(window,reset_bounds);
+						int id_to_swap = mainTree.clickOccur_swap(window,reset_bounds, menu_bounds, mainmenu);
 						int id_to_swap2;
 
 						while (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
@@ -80,24 +79,23 @@ int main(void) {
 							time = clock.restart();
 							timed_resources.changeScore(mainTree.score);
 							mainTree.updateGame_blocks(time);
-							if( mainTree.updateGame_drop(drop_clock.getElapsedTime(), drops) == true)
-								drop_clock.restart();
 							window.clear(lightblue);
 							mainTree.drawTree(window, state);
-							timed_resources.drawAll(window,state);
-							id_to_swap2 = mainTree.clickOccur_swap(window,reset_bounds);
+							timed_resources.drawAll(window,state,mainTree);
+							id_to_swap2 = mainTree.clickOccur_swap(window,reset_bounds, menu_bounds, mainmenu);
 							if (mainTree.is_game_over() == true)
 								goto ifGameEnds;
 
 							if(id_to_swap == -2 || id_to_swap2 == -2){
 								clock.restart();
-								drops = 2;
 							}
 
 							else if (id_to_swap >0 && id_to_swap2 >0)
 								mainTree.draw_select(id_to_swap,id_to_swap2,window,state);
 							timed_resources.changeComboUpdate(mainTree.combo_count-1);
 							window.display();
+							if (mainmenu.gamestatus == 0) break;
+
 					}
 			
 					if(mainTree.swap_colours(id_to_swap,id_to_swap2) == 0)
@@ -107,32 +105,37 @@ int main(void) {
 					}
 				}
 			if (event.type == sf::Event::MouseButtonPressed && mainTree.is_game_over() == true){
-				timed_resources.gamestatus_changeString("");
-				mainTree.gameover_reset(window,reset_bounds);
+			
+				mainTree.gameover_reset(window,reset_bounds,menu_bounds,mainmenu);
 			}
 		}
 
+
 		ifGameEnds:
 		mainTree.updateGame_blocks(time);
-		if( mainTree.updateGame_drop(drop_clock.getElapsedTime(), drops) == true)
-			drop_clock.restart();
 		window.clear(lightblue);
 		mainTree.drawTree(window, state);
-		timed_resources.drawAll(window,state);
+		timed_resources.drawAll(window,state,mainTree);
 		timed_resources.changeComboUpdate(mainTree.combo_count-1);
 	
 		if (mainTree.is_game_over() == true){
+			if(mainTree.highScore_recorded == false){
+				timed_resources.write_highScore();
+				mainTree.highScore_recorded =true;
+			}
+
 			timed_resources.gamestatus_changeString("You lost!\n Click reset\n to start again");
-			drops = 2;
+			drop_clock.restart();
+
 			window.display();
-			clock.restart();
 			
 		
 			
 		}
 	
-		else window.display();
-
+		else{
+			window.display();
+		}
 	}
 
 }

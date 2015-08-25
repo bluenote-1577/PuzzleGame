@@ -6,10 +6,15 @@
 #include <memory>
 #include "Block.hpp"
 #include "Includer.hpp"
+#include "MainMenu.hpp"
 #include <list>
 #include <unordered_set>
 #include <utility>
 #include <cmath>
+#include <iostream>
+#include <fstream>
+
+
 
 class Blocktree : public Block{
 
@@ -20,21 +25,25 @@ public:
 	static	const int column_length = 10;
 	Blocktree();
 	int score;
-	int clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& reset);
+
 	bool is_game_over();
 	int combo_count;
 	int last_score;
 	//functions
-
+	int clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& reset, const sf::FloatRect& menu, MainMenu& mainmenu );
 	void drawTree(sf::RenderTarget& window, sf::RenderStates state);
-	bool clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset);
+	bool clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset, const sf::FloatRect& menu, MainMenu& mainmenu);
 	void updateScan();
 	void clearScan();
 	void updateGame_blocks(sf::Time time);
 	int swap_colours (int id1, int id2);
 	void draw_select(int id1, int id2, sf::RenderWindow& window, sf::RenderStates state);
-	void gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& reset);
-	bool updateGame_drop(sf::Time time, int& count);
+	void gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& reset,const sf::FloatRect& menu, MainMenu& mainmenu);
+	void updateGame_drop();
+	void re_initialize();
+	bool highScore_recorded;
+	sf:: Clock timerClock;
+	sf:: Clock drop_clock;
 	
 
 
@@ -70,13 +79,13 @@ private:
 	bool findid(int idcol, int idcheck);
 	bool finished_updating;
 	bool game_over;
+	int drops;
+
+
 
 	//private functions
 	void dropRow();
-	void initializeTree(const sf::Texture& colour1,const 
-		sf::Texture& colour2,const sf::Texture& colour3,
-		const sf::Texture& colour1_select, const sf::Texture& colour2_select,
-		const sf::Texture& colour3_select);
+	void initializeTree();
 	void eraserow(int idmap_row);
 	void erasecolumn(int idmap_column);
 	void scancolumn();

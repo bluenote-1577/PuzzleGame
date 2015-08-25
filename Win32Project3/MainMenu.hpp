@@ -21,6 +21,7 @@ private:
 	sf:: Text instructions;
 	sf:: Text reset;
 
+
 	sf::RectangleShape timedshape;
 	sf::RectangleShape instructions_shape;
 	sf::RectangleShape back;

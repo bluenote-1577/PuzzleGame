@@ -15,7 +15,7 @@ Blocktree:: Blocktree() : Pink(), Green(), Teal(),matrix(3),column_ids(3)
 	Teal_select.loadFromFile("Buttons/GJ_button_02_select.png");
 	srand(time(NULL));
 
-	initializeTree(Pink,Teal,Green, Pink_select, Teal_select, Green_select);
+	initializeTree();
 	
 
 }
@@ -39,7 +39,7 @@ void Blocktree:: drawTree(sf::RenderTarget& window, sf::RenderStates state)
 
 }
 
-bool Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset)
+bool Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset, const sf::FloatRect& menu, MainMenu& mainmenu)
 {
 
 	if (game_over == true)
@@ -118,6 +118,7 @@ bool Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& 
 		dropRow();
 		return false;
 	}
+
 	
 }
 
@@ -132,9 +133,7 @@ void Blocktree::updateScan()
 }
 
 
-void Blocktree:: initializeTree (const sf::Texture& Pink, const sf::Texture& Teal,
-								 const sf::Texture& Green, const sf::Texture& Pink_select,
-								 const sf::Texture& Teal_select, const sf::Texture& Green_select)
+void Blocktree:: initializeTree ()
 {
 
 	
@@ -184,7 +183,11 @@ void Blocktree:: initializeTree (const sf::Texture& Pink, const sf::Texture& Tea
 	combo_count = 1;
 	finished_updating = false;
 	game_over = false;
+	drops = 2;
+	highScore_recorded = false;
 	updateScan();
+	timerClock.restart();
+
 	
 }
 
@@ -463,6 +466,7 @@ void Blocktree::  updateGame_blocks(sf:: Time time)
 {
 
 	updateScan();
+	updateGame_drop();
 	for( auto& column : matrix)
 		for ( auto& elements : column){
 
@@ -477,9 +481,10 @@ void Blocktree::  updateGame_blocks(sf:: Time time)
 			}
 		}
 
+
 }
 
-int Blocktree:: clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& reset)
+int Blocktree:: clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& reset, const sf::FloatRect& menu, MainMenu& mainmenu)
 {
 
 	if(game_over == true)
@@ -499,10 +504,7 @@ int Blocktree:: clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& re
 
 	
 	if (reset.contains(pos_x,pos_y)){
-		for(auto& bro : matrix)
-			bro.clear();
-
-		initializeTree(Pink,Teal,Green, Pink_select, Teal_select, Green_select);
+		re_initialize();
 		return -2;
 		
 	}
@@ -518,6 +520,12 @@ int Blocktree:: clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& re
 
 
 			}
+	}
+
+	if(menu.contains(pos_x,pos_y)){
+		mainmenu.gamestatus = 0;
+		re_initialize();
+		return -1;
 	}
 
 
@@ -673,7 +681,7 @@ bool Blocktree:: is_game_over()
 
 }
 
-void Blocktree:: gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& reset)
+void Blocktree:: gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& reset,const sf::FloatRect& menu, MainMenu& mainmenu)
 {
 
 	sf:: Vector2i initial = sf::Mouse::getPosition(window);
@@ -684,35 +692,41 @@ void Blocktree:: gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& 
 
 	if(reset.contains(pos_x,pos_y)){
 
-		for(auto& bro : matrix)
-			bro.clear();
-
-		initializeTree(Pink,Teal,Green, Pink_select, Teal_select, Green_select);
+		re_initialize();
 
 		game_over = false;
 		}
 
+	if(menu.contains(pos_x,pos_y)){
+
+		mainmenu.gamestatus = 0;
+		re_initialize();
+
+	}
+
 
 }
 
-bool Blocktree :: updateGame_drop( sf::Time drop_time,int& count)
+void Blocktree :: updateGame_drop()
 {
 
 	if(game_over == true)
-		return false;
+		return;
 
-	float timer = (2/log10(count));
-	float time = drop_time.asSeconds();
-	int timecast = static_cast<int>(time);
+	float drop_time = drop_clock.getElapsedTime().asSeconds();
+	float timer = (2/log10(drops));
+	float time = drop_time;
 
 	if(time/timer > 1){
 	
 	dropRow();
-	count++;
-	return true;
+	drops++;
+	drop_clock.restart();
+	return;
+
 	}
 
-	else return false;
+	else return;
 }
 
 void Blocktree:: scancolumn_new()
@@ -856,3 +870,16 @@ void Blocktree:: scancolumn_new()
 	}
 		
 }
+
+void Blocktree:: re_initialize()
+
+{
+
+	for(auto& bro : matrix)
+			bro.clear();
+
+		initializeTree();
+
+}
+
+
