@@ -113,14 +113,101 @@ void TimedResourceHolder:: timerUpdate(Blocktree& mainTree)
 }
 bool TimedResourceHolder :: write_highScore()
 {
-	std::fstream myfile;
-	myfile.open("high_scores.txt");
+	bool is_empty = true;
+	std::ifstream myfile;
+	myfile.open("high_scores.dat");
+	std:: string first;
+	std:: string second;
+	std::string dicks = "1";
+
+
+
 	if (myfile.fail())
 		return false;
 
+	while(myfile>> first >> second)
+	{
+		
+		
+
+		std::stringstream convert1(first);
+		std::stringstream convert2(second);
+
+		int score;
+		int time;
+
+
+		convert1 >> score;
+		convert2 >> time;
+
+		if(score < 0 || time < 0 || score > 9999 || time > 9999)
+			return false;
+
+		score_container.push_back(score);
+		time_container.push_back(time);
+
+	}
+
+	myfile.close();
+
+	std:: stringstream convert_score (s);
+	std:: stringstream convert_time (time_update);
+
+	int myScore;
+	int myTime;
+	int count = 0;
+
+	convert_score >> myScore;
+	convert_time >> myTime;
+
+	for( auto it = score_container.begin(); it!= score_container.end(); it++){
+		if (myScore > (*it)){
+			is_empty = false;
+			score_container.insert(it,myScore);
+			break;
+		}
+
+		else count++;
+		is_empty = false;
+	}
+
+
+	if (count == score_container.size() && is_empty == false){
+		auto it = score_container.end();                                                            
+		score_container.insert(it,myScore);
+	}
+
+	auto it = time_container.begin();
+
+	for(int i = 0; i < count; i++)
+		it++;
+	time_container.insert(it,myTime);
+	
+	if (is_empty == true){
+		score_container.push_front(myScore);
+	}
+
 	
 
+	auto it2 = time_container.begin();
+
+	std::ofstream samefile("high_scores.dat");
+
+	for(auto it3 = score_container.begin(); it3 != score_container.end(); it3++){
+	
+		std::string newScores = std::to_string((*it3));
+		std::string newTimes = std::to_string((*it2));
+		samefile<<newScores;
+		samefile << std::endl;
+		samefile<<newTimes;
+		samefile<<std::endl;
+		it2++;
+
+	}
+
+	myfile.close();
+	
 	return true;
 
-
+		
 }

@@ -5,7 +5,6 @@
 #include <vector>
 #include <memory>
 #include "Block.hpp"
-#include "Includer.hpp"
 #include "MainMenu.hpp"
 #include <list>
 #include <unordered_set>
@@ -38,7 +37,7 @@ public:
 	void updateGame_blocks(sf::Time time);
 	int swap_colours (int id1, int id2);
 	void draw_select(int id1, int id2, sf::RenderWindow& window, sf::RenderStates state);
-	void gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& reset,const sf::FloatRect& menu, MainMenu& mainmenu);
+	bool gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& reset,const sf::FloatRect& menu, MainMenu& mainmenu);
 	void updateGame_drop();
 	void re_initialize();
 	bool highScore_recorded;

@@ -186,6 +186,7 @@ void Blocktree:: initializeTree ()
 	drops = 2;
 	highScore_recorded = false;
 	updateScan();
+	drop_clock.restart();
 	timerClock.restart();
 
 	
@@ -681,7 +682,7 @@ bool Blocktree:: is_game_over()
 
 }
 
-void Blocktree:: gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& reset,const sf::FloatRect& menu, MainMenu& mainmenu)
+bool Blocktree:: gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& reset,const sf::FloatRect& menu, MainMenu& mainmenu)
 {
 
 	sf:: Vector2i initial = sf::Mouse::getPosition(window);
@@ -695,15 +696,18 @@ void Blocktree:: gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& 
 		re_initialize();
 
 		game_over = false;
+		return true;
 		}
 
 	if(menu.contains(pos_x,pos_y)){
 
 		mainmenu.gamestatus = 0;
 		re_initialize();
-
+		game_over = false;
+		return true;
 	}
 
+	else return false;
 
 }
 
@@ -836,6 +840,7 @@ void Blocktree:: scancolumn_new()
 			}
 		
 			for( int c = 0; c<maxOccur; c++)
+
 			{
 				std::unique_ptr <std::vector<columnholder>> ptr_to_vector (new std::vector <columnholder>);
 				if (greenmax[c] < 3) break;

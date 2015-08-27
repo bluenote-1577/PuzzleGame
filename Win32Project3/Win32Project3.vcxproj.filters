@@ -35,9 +35,6 @@
     <ClInclude Include="Block.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Includer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Blocktree.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

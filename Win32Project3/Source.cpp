@@ -34,7 +34,8 @@ int main(void) {
 	{
 		
 		sf::Event event;
-		while(mainmenu.gamestatus ==0 && window.isOpen() || mainmenu.gamestatus == 2 && window.isOpen()){
+		while(mainmenu.gamestatus != 1 && window.isOpen()){
+			
 
 			while(window.pollEvent(event)){
 				if (event.type == sf::Event::Closed )
@@ -44,7 +45,8 @@ int main(void) {
 			}
 			window.clear(lightblue);
 			mainmenu.drawScreen(window);
-			drop_clock.restart();
+			mainTree.drop_clock.restart();
+			mainTree.timerClock.restart();
 			window.display();
 		}
 		
@@ -106,7 +108,8 @@ int main(void) {
 				}
 			if (event.type == sf::Event::MouseButtonPressed && mainTree.is_game_over() == true){
 			
-				mainTree.gameover_reset(window,reset_bounds,menu_bounds,mainmenu);
+				if(mainTree.gameover_reset(window,reset_bounds,menu_bounds,mainmenu));
+				timed_resources.gamestatus_changeString("");
 			}
 		}
 
@@ -120,12 +123,14 @@ int main(void) {
 	
 		if (mainTree.is_game_over() == true){
 			if(mainTree.highScore_recorded == false){
-				timed_resources.write_highScore();
+				if(timed_resources.write_highScore())
 				mainTree.highScore_recorded =true;
 			}
+			if(mainTree.highScore_recorded == false)
+			timed_resources.gamestatus_changeString("You lost!\n Click reset\n to start again\n High Score\n Error!");
 
-			timed_resources.gamestatus_changeString("You lost!\n Click reset\n to start again");
-			drop_clock.restart();
+			else timed_resources.gamestatus_changeString("You lost!\n Click reset\n to start again\n High Score\n Recorded!");
+			mainTree.drop_clock.restart();
 
 			window.display();
 			

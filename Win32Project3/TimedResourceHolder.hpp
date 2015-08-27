@@ -4,7 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "Blocktree.hpp"
-
+#include <list>
+#include <cstdlib>
+#include <sstream>
 
 class TimedResourceHolder
 {
@@ -37,8 +39,9 @@ private:
 	std::string combo_update;
 	std::string score_update;
 	std::string time_update;
-
 	
+	std::list <int> score_container;
+	std::list <int> time_container;
 
 
 };
