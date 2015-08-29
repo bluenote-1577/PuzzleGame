@@ -1,39 +1,47 @@
-﻿Build started 26/08/2015 6:04:13 PM.
-     1>Project "C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Win32Project3\Win32Project3.vcxproj" on node 2 (Build target(s)).
+﻿Build started 29/08/2015 1:38:58 PM.
+     1>Project "C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Win32Project3\Win32Project3.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\SFML-2.3.1\include" /I"C:\Program Files (x86)\Visual Leak Detector\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D SFML_STATIC /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Block.cpp Blocktree.cpp Source.cpp TimedResourceHolder.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\SFML-2.3.1\include" /I"C:\Program Files (x86)\Visual Leak Detector\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D SFML_STATIC /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Block.cpp Blocktree.cpp MainMenu.cpp GameLoop.cpp TimedResourceHolder.cpp
+         TimedResourceHolder.cpp
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\timedresourceholder.cpp(242): warning C4390: ';' : empty controlled statement found; is this the intent?
+         GameLoop.cpp
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\gameloop.cpp(112): warning C4390: ';' : empty controlled statement found; is this the intent?
+         MainMenu.cpp
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\mainmenu.cpp(137): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\mainmenu.cpp(138): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\mainmenu.cpp(140): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\mainmenu.cpp(143): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\mainmenu.cpp(146): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\mainmenu.cpp(153): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+         Blocktree.cpp
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(17): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(66): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(67): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(69): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(78): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(125): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(558): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(559): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(565): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(571): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(575): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(584): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(763): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(764): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(766): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(774): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(799): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(802): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(849): warning C4018: '<' : signed/unsigned mismatch
          Block.cpp
          Generating Code...
-         Compiling...
-         TimedResourceHolder.cpp
-         Source.cpp
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\source.cpp(112): warning C4390: ';' : empty controlled statement found; is this the intent?
-         Blocktree.cpp
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(16): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(56): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(57): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(59): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(68): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(117): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(500): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(501): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(507): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(513): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(517): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(526): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(691): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(692): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(694): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(702): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(721): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(755): warning C4018: '<' : signed/unsigned mismatch
-         Generating Code...
-     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(123): warning C4715: 'Blocktree::clickOccur_clear' : not all control paths return a value
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\blocktree.cpp(131): warning C4715: 'Blocktree::clickOccur_clear' : not all control paths return a value
+     1>c:\users\owner\desktop\sunshine\puzzlegame\win32project3\mainmenu.cpp(201): warning C4715: 'MainMenu::scanHighScores' : not all control paths return a value
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Debug\PuzzleGame.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\SFML-2.3.1\lib" /LIBPATH:"C:\Program Files (x86)\Visual Leak Detector\lib\Win32" "sfml-graphics-s-d.lib" freetype.lib jpeg.lib "sfml-window-s-d.lib" opengl32.lib "sfml-system-s-d.lib" winmm.lib "sfml-audio-s-d.lib" openal32.lib "sfml-network-s-d.lib" ws2_32.lib "sfml-main-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Debug\PuzzleGame.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Debug\PuzzleGame.lib" /MACHINE:X86 Debug\Block.obj
          Debug\Blocktree.obj
          Debug\MainMenu.obj
-         Debug\Source.obj
+         Debug\GameLoop.obj
          Debug\TimedResourceHolder.obj
      1>sfml-graphics-s-d.lib(BlendMode.cpp.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'sfml-graphics-s-d.lib(BlendMode.cpp.obj)' or at 'C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Debug\vc110.pdb'; linking object as if no debug info
      1>sfml-graphics-s-d.lib(Color.cpp.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'sfml-graphics-s-d.lib(Color.cpp.obj)' or at 'C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Debug\vc110.pdb'; linking object as if no debug info
@@ -90,8 +98,8 @@
      1>sfml-system-s-d.lib(ThreadLocalImpl.cpp.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'sfml-system-s-d.lib(ThreadLocalImpl.cpp.obj)' or at 'C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Debug\vc110.pdb'; linking object as if no debug info
      1>sfml-main-d.lib(MainWin32.cpp.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'sfml-main-d.lib(MainWin32.cpp.obj)' or at 'C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Debug\vc110.pdb'; linking object as if no debug info
          Win32Project3.vcxproj -> C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Debug\PuzzleGame.exe
-     1>Done Building Project "C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Win32Project3\Win32Project3.vcxproj" (Build target(s)).
+     1>Done Building Project "C:\Users\Owner\Desktop\Sunshine\PuzzleGame\Win32Project3\Win32Project3.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:04.15
+Time Elapsed 00:00:04.72

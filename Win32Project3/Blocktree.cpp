@@ -1,5 +1,6 @@
 #include "Blocktree.hpp"
 
+// Default constructor. Loads textures from folders to be accessed by new block objects and initializes all the blocks.
 
 Blocktree:: Blocktree() : Pink(), Green(), Teal(),matrix(3),column_ids(3)
 
@@ -20,6 +21,8 @@ Blocktree:: Blocktree() : Pink(), Green(), Teal(),matrix(3),column_ids(3)
 
 }
 
+// Renders the tree. Used everyframe in GameLoop. If game is over it renders the select sprite(lighter hue).
+
 void Blocktree:: drawTree(sf::RenderTarget& window, sf::RenderStates state)
 {
 	if (game_over == false)
@@ -38,6 +41,13 @@ void Blocktree:: drawTree(sf::RenderTarget& window, sf::RenderStates state)
 	}
 
 }
+
+//Click function used in GameLoop after a click has been detected whilst holding down the R or C key.
+//Checks mouse position, maps it to global coordinates(detects resizing).
+//Ascertains the block ID that is clicked on, and checks to see if the ID is valid for erasing by checking the ID mapping containers (column_ids, row_ids)
+//Calls either the erasecolumn or eraserow function depending on which key is held and if erasing is valid.
+
+//to note : if r or C are held and the upper left corner is clicked, a row drops. this was for testing purposes.
 
 bool Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& reset, const sf::FloatRect& menu, MainMenu& mainmenu)
 {
@@ -90,9 +100,7 @@ bool Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& 
 					column = true;
 				}
 
-			//	if (column==true && row== true)
-			//	{
-			//	}
+	
 				 if(row == true && sf::Keyboard::isKeyPressed(sf::Keyboard::R)){
 					eraserow(idcheck);
 					is_success = true;
@@ -122,6 +130,10 @@ bool Blocktree::clickOccur_clear(sf::RenderWindow& window, const sf::FloatRect& 
 	
 }
 
+//Erase the ID mapping containers, and scans the entire blocktree and creates a new one. 
+
+//Used in updateGame_blocks which is called
+//every frame in the GameLoop.
 
 void Blocktree::updateScan()
 {
@@ -132,6 +144,10 @@ void Blocktree::updateScan()
 	scancolumn_new();
 }
 
+//Creates the std::vector<col> matrix. Creates a 3x5 matrix of random block colours, 
+//and sets all the needed private member functions. Used when game resets, when Blocktree
+///initializes.
+
 
 void Blocktree:: initializeTree ()
 {
@@ -139,7 +155,8 @@ void Blocktree:: initializeTree ()
 	
 	const int initialLength = 5;
 		
-		
+		// id/column_length maps to the column number.
+		// id%column_length maps to the row number.
 
 
 		for ( int b = 0; 3>b; b++)
@@ -155,7 +172,7 @@ void Blocktree:: initializeTree ()
 				ptr->type = Type::Pink;
 				ptr->id = i + b*column_length;
 
-			matrix[ptr->id/column_length].push_back(std::move(ptr));
+			matrix[ptr->id/column_length].push_back(std::move(ptr));  
 			}
 
 			if (random == 1){
@@ -183,7 +200,7 @@ void Blocktree:: initializeTree ()
 	combo_count = 1;
 	finished_updating = false;
 	game_over = false;
-	drops = 2;
+	drops = 5;
 	highScore_recorded = false;
 	updateScan();
 	drop_clock.restart();
@@ -192,10 +209,14 @@ void Blocktree:: initializeTree ()
 	
 }
 
+//Called through clickOccur_clear function. If the id of the block was in the ID mapping container, then it calls this function
+//Every block in the column above the block erased has id_dropped + 1 since it falls 1 block.
+
 void Blocktree::eraserow(int id_dude){
 
 
-	//score++;
+	// id_dude is id passed, and id_dude%column_length describes which row number to erase.
+
 
 	for(col::iterator it = matrix[0].erase(matrix[0].begin()+id_dude % column_length ); it !=matrix[0].end(); it++)
 	{		
@@ -213,9 +234,6 @@ void Blocktree::eraserow(int id_dude){
 		(*it) -> id_dropped++;
 	}
 
-	//for(col& column : matrix)
-	//	for(auto& block : column)
-		//	(*block).id_dropped = 1;
 					
 	colsize[0]--,colsize[1]--,colsize[2]--;
 	finished_updating = false;
@@ -227,9 +245,10 @@ void Blocktree::eraserow(int id_dude){
 
 }
 
-void Blocktree::erasecolumn(int block_id){
+// A little more complicated erasecolumn function. Same method of calling as eraserow. the block_id is passed through the clickOccur_clear function again.
 
-	//score++;
+
+void Blocktree::erasecolumn(int block_id){
 
 	int id_col = block_id /column_length;
 	int id_row = block_id % column_length;
@@ -239,6 +258,10 @@ void Blocktree::erasecolumn(int block_id){
 	auto it_last = column_ids[id_col][0].begin();
 	int maxsize;
 	int number_blocks_erased=0;
+
+	// Scans the 3d vector(array) column_ids that has all the eraseable IDS mapped into it.
+	// Uses the block id passed and checks to see which vector container it's in.
+	// Breaks the nested for loop.
 
 	for (auto& column : column_ids)
 		for (auto & containers : column)
@@ -253,17 +276,22 @@ void Blocktree::erasecolumn(int block_id){
 
 			
 
+//Use iterators it_last and it_first to ascertain the correct Block ids.
 
 after:
 	it_last = it_first + maxsize - 1;
 	id_second = it_last ->id;
 	int id_drop = (id_second - id_first + 1);
-	
+
+//Checks how many blocks will be erased for scoring purposes, but more importantly if the
+//blocks being erased and currently falling, the column will NOT erase.
+
 	for(auto it = matrix[id_col].begin()+id_first%column_length; it != matrix[id_col].begin()+id_second%column_length+1; it++){
 		number_blocks_erased++;
 		if ((*it)->id_dropped != 0)
 			return;
 	}
+//Erases id_first to id_second and moves id's and id_dropped accordingly.
 	for(auto it = matrix[id_col].erase(matrix[id_col].begin()+(id_first%column_length), matrix[id_col].begin()+(id_second%column_length)+1); it != matrix[id_col].end(); it++){
 		(*it)->id -= id_drop ;
 		(*it)->id_dropped += id_drop;
@@ -277,7 +305,24 @@ after:
 }
 
 
-/**void Blocktree:: scancolumn()
+/**void Blocktree:: scancolumn()    
+
+*************************************
+The old scancolumn() function, the new one can handle the situation where the following occurs:
+
+Teal
+Teal
+Teal
+Green
+Teal
+Teal
+Teal
+
+I had to change the column ID mapping container into a 3d vector instead of a 2d one to deal with the situation
+where 2 "packets" of eraseable blocks of the same colour occurs.
+
+************************************
+
 {
 	int num_col = 3;
 
@@ -397,6 +442,8 @@ after:
 	
 	**/
 
+//scanrow() function, used to map eraseable (3 of the same colour) rows into 
+//row_ids for erasing.
 
 void Blocktree:: scanrow()
 {
@@ -439,6 +486,8 @@ void Blocktree:: scanrow()
 
 }
 
+// scans a 3d array to see if an id is inside.
+// used in clickOccur_clear to see if the id clicked is inside the id_columns container.
 bool Blocktree:: findid(int idcol, int idcheck)
 {
 
@@ -462,12 +511,17 @@ bool Blocktree:: findid(int idcol, int idcheck)
 
 }
 
-void Blocktree::  updateGame_blocks(sf:: Time time)
+//Update function called every frame in gameloop.
+//calls updateScan for id containers, calls drop to drop blocks if the id_dropped is not 0;
+// calls updateGame_drop to see if a row should be dropped,
+// and returns the time left until a drop occurs.
+
+float Blocktree::  updateGame_blocks(sf:: Time time)
 
 {
 
 	updateScan();
-	updateGame_drop();
+	float returnvalue = updateGame_drop();
 	for( auto& column : matrix)
 		for ( auto& elements : column){
 
@@ -481,9 +535,13 @@ void Blocktree::  updateGame_blocks(sf:: Time time)
 			(*elements).setOrigin();
 			}
 		}
-
+	return returnvalue;
 
 }
+
+//The other click function called in the game loop. When R or C and not held, this function
+//is called for swapping blocks and for going to the menu or restarting the game.
+// all this function does is return the ID of the block so that the swap_colours function will work.
 
 int Blocktree:: clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& reset, const sf::FloatRect& menu, MainMenu& mainmenu)
 {
@@ -534,6 +592,8 @@ int Blocktree:: clickOccur_swap(sf::RenderWindow& window,const sf::FloatRect& re
 
 }
 
+// if the 2 ids are adjacent, colours are swapped. Combo resets.
+
 int Blocktree :: swap_colours(int id1, int id2)
 {
 
@@ -578,6 +638,8 @@ int Blocktree :: swap_colours(int id1, int id2)
 
 }
 
+//Used in swap_colours to change the actual textures depending on the type. Swap_colours just swaps the type, not the textures.
+
 void Blocktree:: setType(int id)
 {
 
@@ -597,6 +659,8 @@ void Blocktree:: setType(int id)
 
 }
 
+//used the in GameLoop to render the selected texture sprites (lighter hue) while swapping blocks.
+
 void Blocktree :: draw_select(int id1, int id2, sf::RenderWindow& window, sf:: RenderStates state)
 
 {
@@ -604,6 +668,9 @@ void Blocktree :: draw_select(int id1, int id2, sf::RenderWindow& window, sf:: R
 	(*matrix[id2/column_length][id2%column_length]).draw_select(window, state);
 
 }
+
+//Drops a row of blocks of random colour. If there are more than 10 blocks in a row and this function occurs, the game is over.
+//arithmetic involving the use of column lengths and matrix stuff is used to ascertain the new block id and id_dropped.
 
 void Blocktree :: dropRow()
 
@@ -668,6 +735,8 @@ void Blocktree :: dropRow()
 	updateScan();
 }
 
+//if you've made it this far into my messy code then I don't think i need to explain what this function does
+
 bool Blocktree:: is_game_over()
 {
 
@@ -681,6 +750,9 @@ bool Blocktree:: is_game_over()
 
 
 }
+
+//this function is basically the reset portion of the clickOccur_swap function. this is called
+//when the game is over and this is used instead of clickOccur_swap so the user can't swap blocks.
 
 bool Blocktree:: gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& reset,const sf::FloatRect& menu, MainMenu& mainmenu)
 {
@@ -711,38 +783,59 @@ bool Blocktree:: gameover_reset(sf:: RenderWindow& window, const sf::FloatRect& 
 
 }
 
-void Blocktree :: updateGame_drop()
+//drop timer function.
+//This class has a drop_clock that continuously runs. When that drop_clock is equal to the timer,
+//dropRow is called and the drop_clock resets. This timer is a function of the number of drops
+//that has occured thus far. It is a reciprocal logarithmic function squared. The reason for this
+//is that the difficulty of the game therefore increases really fast early on, but slows down later.
+
+float Blocktree :: updateGame_drop()
 {
 
 	if(game_over == true)
-		return;
+		return 0.0;
 
-	float drop_time = drop_clock.getElapsedTime().asSeconds();
-	float timer = (2/log10(drops));
-	float time = drop_time;
+	float time = drop_clock.getElapsedTime().asSeconds();
+	float timer = (2/log10(drops)) * (2/log10(drops));
+
+	if(timer > 4.1)
+		timer = 9.0-0.5*drops;
 
 	if(time/timer > 1){
 	
 	dropRow();
 	drops++;
 	drop_clock.restart();
-	return;
+	return 0.0;
 
 	}
 
-	else return;
+	if(timer-time < 0.1)
+		return 0;
+
+	else return (timer-time);
 }
+
+/**
+
+The scancolumn_new() function:
+
+This function scans the entire matrix and maps the ids that are available for clearing in a column(3 or more of the same colour into a packet then
+into a 3d vector container. It can be thought about as a 2d vector container that holds another "packet" vector that contains all
+the packets of blocks to be removed.  
+
+**/
 
 void Blocktree:: scancolumn_new()
 {
 	int num_col = 3;
-	static const int maxOccur = (column_length/4);
+	static const int maxOccur = (column_length/4); // this describes the maximum number of times "packets" of the same colour can occur in a row.
 
 	for(int i = 0; i<num_col; i++)
 	{
-		int pinkid[maxOccur] = {-1,-1};
-		int pinkcount = 0;
-		int pinkmax[maxOccur]= {0,0};
+		int pinkid[maxOccur] = {-1,-1};		// pinkid = first id that appears  of the colour. pinkcount = current count of how many consecutive blocks of the same colour there are.
+		int pinkcount = 0;					// pinkmax = the maximum number of consecutive blocks of the same colour. everything in an array of size 2 because you can have
+		int pinkmax[maxOccur]= {0,0};		// 2 "packets" of pink, green or teal.
 		int greenid[maxOccur] = {-1,-1};
 		int greencount = 0;
 		int greenmax[maxOccur]= {0,0};
@@ -751,6 +844,7 @@ void Blocktree:: scancolumn_new()
 		int tealmax[maxOccur]= {0,0};
 		int colour_occur[3] = {0,0,0}; // index 0 = pink, 1 = green, 2 = teal;
 
+		//counter function. if 3 of the same type occurs consecutively, then it will be mapped into column_ids.
 
 		for( int b = 0; b< matrix[i].size(); b++)
 		{
@@ -818,6 +912,7 @@ void Blocktree:: scancolumn_new()
 
 		}
 
+		//if max count is greater than 3, the starting id will be mapped into the column_id plus the maxcount.
 
 			for( int c = 0; c<maxOccur; c++)
 			{
@@ -875,6 +970,8 @@ void Blocktree:: scancolumn_new()
 	}
 		
 }
+
+// intializes the tree again.
 
 void Blocktree:: re_initialize()
 

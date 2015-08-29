@@ -1,16 +1,24 @@
 #include "Block.hpp"
 
+// Default Constructor
+
 Block::Block()
 
 {
+	
 	id_dropped = 0;
+
 }
+
+//Constructor used in initializing block textures and id_dropped.
+
 Block :: Block(const sf::Texture& texture, const sf::Texture& texture1) : blockSprite(texture), select_blockSprite(texture1){
 
 	id_dropped = 0;
 
-	
 }
+
+// public function used to render the normal blocksprite through Blocktree.drawTree
 
 void Block:: draw(sf::RenderTarget& window,  sf::RenderStates state) const
 {
@@ -19,6 +27,8 @@ void Block:: draw(sf::RenderTarget& window,  sf::RenderStates state) const
 
 }
 
+// public function used to render the selected blocksprite through Blocktree.drawTree. (selected blocksprite has a lighter hue)
+
 void Block :: draw_select(sf::RenderTarget& window, sf::RenderStates state) const
 {
 
@@ -26,6 +36,7 @@ void Block :: draw_select(sf::RenderTarget& window, sf::RenderStates state) cons
 
 }
 
+// sets the sprites' origins according to the block ID. used in updating block logic.
 void Block:: setOrigin()
 {
 
@@ -38,9 +49,9 @@ void Block:: setOrigin()
 
 }
 
-float Block:: drop(sf:: Time time)  //replaces    	//for(col& column : matrix)
-										//	for(auto& block : column)
-										//	(*block).setOrigin();
+// checks to see if the block still has to fall. when id_dropped = 0, the block has stopped dropping. returns the total vertical movement of the block.
+float Block:: drop(sf:: Time time)  
+
 {
 	if(this->id_dropped == 0)
 		return 1;

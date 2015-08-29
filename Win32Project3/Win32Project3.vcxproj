@@ -14,7 +14,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blocktree.cpp" />
     <ClCompile Include="MainMenu.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="TimedResourceHolder.cpp" />
   </ItemGroup>
   <ItemGroup>

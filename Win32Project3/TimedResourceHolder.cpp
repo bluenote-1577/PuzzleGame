@@ -53,6 +53,11 @@ TimedResourceHolder :: TimedResourceHolder() : reset_button(sf::Vector2f(50.0,40
 	menu.setString("Menu");
 	menu.setStyle(0);
 
+	dropTime.setFont(main_font);
+	dropTime.setPosition(440.0,300);
+	dropTime.setColor(sf::Color::Black);
+	dropTime.setString("Drop in :");
+	dropTime.setStyle(0);
 
 	timer.setFont(main_font);
 	timer.setPosition(440,230);
@@ -102,6 +107,7 @@ void TimedResourceHolder:: drawAll( sf:: RenderTarget& window, sf::RenderStates 
 	window.draw(menu_button);
 	window.draw(menu);
 	window.draw(timer);
+	window.draw(dropTime);
 }
 
 void TimedResourceHolder:: timerUpdate(Blocktree& mainTree)
@@ -115,7 +121,7 @@ bool TimedResourceHolder :: write_highScore()
 {
 	bool is_empty = true;
 	std::ifstream myfile;
-	myfile.open("high_scores.dat");
+	myfile.open("high_scores.txt");
 	std:: string first;
 	std:: string second;
 	std::string dicks = "1";
@@ -191,7 +197,7 @@ bool TimedResourceHolder :: write_highScore()
 
 	auto it2 = time_container.begin();
 
-	std::ofstream samefile("high_scores.dat");
+	std::ofstream samefile("high_scores.txt");
 
 	for(auto it3 = score_container.begin(); it3 != score_container.end(); it3++){
 	
@@ -210,4 +216,27 @@ bool TimedResourceHolder :: write_highScore()
 	return true;
 
 		
+}
+
+void TimedResourceHolder :: changeDropTime(float drop_time)
+{
+
+
+	if(drop_time > 1.0){
+	std::ostringstream out;
+	out<<std::setprecision(2) << drop_time;
+	
+
+	dropTime.setString("Drop in \n" + out.str());
+	}
+
+	if(drop_time <1.0){		
+	std::ostringstream out;
+	out<<std::setprecision(1) << drop_time;
+	
+
+	dropTime.setString("Drop in \n" + out.str());
+	}
+
+	if (drop_time < 0.2);
 }

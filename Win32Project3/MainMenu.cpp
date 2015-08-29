@@ -75,7 +75,7 @@ MainMenu :: MainMenu() : timedshape(sf::Vector2f(130,40)), instructions_shape(sf
 	instructions.setPosition(20,20);
 	instructions.setCharacterSize(25);
 	instructions.setColor(sf::Color::Black);
-	instructions.setString("Welcome to ComboPuzzle! The goal of this\n game is to get as many points as possible\n\n You get points by clearing rows and columns of blocks\n that are greater than 3. To clear a row, hold the R key\n and left click a row that has 3 blocks. To clear a column \ndo the same but hold C instead. When you clear rows\n or columns, your combo counter increases. The higher it\n is, the more points you get!\n\n You can also swap blocks by clicking a block and dragging\n it to an adjacent block. However, when you swap, your\n combo counter resets to 0. Clear fast, or lose! \n\n");
+	instructions.setString("Welcome to ComboPuzzle! The goal of this\n game is to get as many points as possible\n of the same colour.\n You get points by clearing rows and columns of blocks\n that are greater than 3. To clear a row, hold the R key\n and left click a row that has 3 blocks. To clear a column \ndo the same but hold C instead. When you clear rows\n or columns, your combo counter increases. The higher it\n is, the more points you get!\n\n You can also swap blocks by clicking a block and dragging\n it to an adjacent block. However, when you swap, your\n combo counter resets to 0. Clear fast, or lose! \n\n");
 	instructions.setStyle(0);
 	
 	highscores_text.setFont(main_font);
@@ -164,7 +164,7 @@ bool MainMenu :: scanHighScores()
 {
 
 	std::ifstream myfile;
-	myfile.open("high_scores.dat");
+	myfile.open("high_scores.txt");
 	std:: string first;
 	std:: string second;
 	std::string dicks = "1";
