@@ -10,11 +10,20 @@
 #include <crtdbg.h>
 #include <thread>
 
+/**
 
+				Main Game Loop
+
+This game loop controls everything that happens in the game. What gets
+rendered, the logic, etc.
+
+
+**/
 
 int main(void) {
 
-	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+
+	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );				
 	sf::RenderWindow window(sf::VideoMode (600,400), "ComboPuzzle");
 	window.setFramerateLimit(60);
 	sf::RenderStates state;
@@ -23,21 +32,17 @@ int main(void) {
 	sf::FloatRect reset_bounds = timed_resources.reset_button.getGlobalBounds();
 	sf::FloatRect menu_bounds = timed_resources.menu_button.getGlobalBounds();
 	sf::Clock clock;
-	sf::Clock drop_clock;
 	sf:: Time time;
-	sf:: Time drop_time;
 	Blocktree mainTree;
 	MainMenu mainmenu;
 	
 	
-	while (window.isOpen())
+	while (window.isOpen())												//Main Loop, while the game is running this loop is occuring
 	{
 		
 		sf::Event event;
-		while(mainmenu.gamestatus != 1 && window.isOpen()){
-			
-
-			while(window.pollEvent(event)){
+		while(mainmenu.gamestatus != 1 && window.isOpen()){             //This loop is the main menu loop. Mainmenu.gamestatus represents what gets rendered. 
+			while(window.pollEvent(event)){                             //This sub-loop only occurs when gamestatus != 1, i.e. we haven't clicked start.
 				if (event.type == sf::Event::Closed )
 					window.close();
 				if (event.type == sf::Event::MouseButtonPressed)
@@ -55,15 +60,15 @@ int main(void) {
 		time = clock.restart();
 		timed_resources.changeScore(mainTree.score);
 
-		
-		while(window.pollEvent(event))
+																		
+		while(window.pollEvent(event))								//checks to see if any event has occured. various functions are executed depending on the event below.
 		{
 			if (event.type == sf::Event::Closed )
 				window.close();
 
 			if(event.type == sf::Event::MouseButtonPressed && mainTree.is_game_over() != true)
 				
-				if(sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Keyboard::isKeyPressed(sf::Keyboard::C)){  //executes clickOccur_clear which checks the rows/columns and erases them.
 					if(mainTree.clickOccur_clear(window,reset_bounds, menu_bounds, mainmenu)){
 						timed_resources.changeComboUpdate(mainTree.combo_count-1);
 						timed_resources.changeScoreUpdate(mainTree.last_score);
@@ -73,15 +78,15 @@ int main(void) {
 				else { 
 					
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-						int id_to_swap = mainTree.clickOccur_swap(window,reset_bounds, menu_bounds, mainmenu);
+						int id_to_swap = mainTree.clickOccur_swap(window,reset_bounds, menu_bounds, mainmenu);  // this branch is for swapping. 
 						int id_to_swap2;
 
 						while (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 						
 							time = clock.restart();
 							timed_resources.changeScore(mainTree.score);
-							timed_resources.changeDropTime(mainTree.updateGame_blocks(time));
-							window.clear(lightblue);
+							timed_resources.changeDropTime(mainTree.updateGame_blocks(time));					// a compact version of the larger loop with rendering and updating
+							window.clear(lightblue);															// occurs when the mouse is held down. 
 							mainTree.drawTree(window, state);
 							timed_resources.drawAll(window,state,mainTree);
 							id_to_swap2 = mainTree.clickOccur_swap(window,reset_bounds, menu_bounds, mainmenu);
@@ -93,14 +98,14 @@ int main(void) {
 							}
 
 							else if (id_to_swap >-1 && id_to_swap2 >-1)
-								mainTree.draw_select(id_to_swap,id_to_swap2,window,state);
+								mainTree.draw_select(id_to_swap,id_to_swap2,window,state);						// the blocks that are being clicked on render their selected sprites
 							timed_resources.changeComboUpdate(mainTree.combo_count-1);
 							window.display();
 							if (mainmenu.gamestatus == 0) break;
 
 					}
 			
-					if(mainTree.swap_colours(id_to_swap,id_to_swap2) == 0)
+					if(mainTree.swap_colours(id_to_swap,id_to_swap2) == 0)										//colour swap occurs once the mouse button has been let go of
 						timed_resources.gamestatus_changeString("Invalid Swap!");
 					else timed_resources.gamestatus_changeString("");
 						timed_resources.changeComboUpdate(mainTree.combo_count-1);
@@ -115,15 +120,15 @@ int main(void) {
 
 
 		ifGameEnds:
-		timed_resources.changeDropTime(mainTree.updateGame_blocks(time));
+		timed_resources.changeDropTime(mainTree.updateGame_blocks(time));										//rendering occurs, updates occur.
 		window.clear(lightblue);
 		mainTree.drawTree(window, state);
 		
 		timed_resources.changeComboUpdate(mainTree.combo_count-1);
 		timed_resources.drawAll(window,state,mainTree);
 		
-	
-		if (mainTree.is_game_over() == true){
+	 
+		if (mainTree.is_game_over() == true){                                          //records the high score if it hasn't been recorded yet and the game is over
 			if(mainTree.highScore_recorded == false){
 				if(timed_resources.write_highScore())
 				mainTree.highScore_recorded =true;

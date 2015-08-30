@@ -33,7 +33,6 @@ public:
 	MainMenu();
 	bool scanHighScores();
 	void drawScreen(sf::RenderWindow& window);
-	void drawInstructions(sf::RenderWindow& window);
 	void clickOccur(sf::RenderWindow& window);
 
 	int gamestatus;

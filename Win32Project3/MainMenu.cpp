@@ -1,5 +1,7 @@
 #include "MainMenu.hpp"
 
+// Default constructor, initializes all the resources. Texts, strings, shapes have their positions and values initialized.
+
 MainMenu :: MainMenu() : timedshape(sf::Vector2f(130,40)), instructions_shape(sf::Vector2f(130,40)), back(sf::Vector2f(50,50)),buttonColour(255,204,255,255),highscore_button(sf::Vector2f(130,40))
 {
 	
@@ -89,6 +91,7 @@ MainMenu :: MainMenu() : timedshape(sf::Vector2f(130,40)), instructions_shape(sf
 
 }
 
+//Draws the correct resources depending on the gamestatus, i.e. which screen should be appearing.
 
 void MainMenu:: drawScreen(sf::RenderWindow& window)
 {
@@ -122,12 +125,9 @@ void MainMenu:: drawScreen(sf::RenderWindow& window)
 	
 }
 
-void MainMenu :: drawInstructions(sf::RenderWindow& window)
-{
-	window.draw(instructions);
-	window.draw(back);
-	window.draw(reset);
-}
+// The click function in the GameLoop that allows us to switch between gamestatus or screens.
+// when we click the highscores page, our function scanHighScores() scans the text file in the folder
+//and returns the top 5 high scores and corresponding times into our containers.
 
 void MainMenu :: clickOccur(sf::RenderWindow& window)
 {
@@ -159,6 +159,8 @@ void MainMenu :: clickOccur(sf::RenderWindow& window)
 	}
 
 }
+
+//scans the text file and inputs our high scores.
 
 bool MainMenu :: scanHighScores()
 {
@@ -199,6 +201,8 @@ bool MainMenu :: scanHighScores()
 
 	myfile.close();
 }
+
+//actually writes the highscores into the strings. 
 
 void MainMenu :: setHighScores()
 {

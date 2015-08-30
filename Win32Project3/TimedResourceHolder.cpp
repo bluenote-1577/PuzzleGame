@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include "TimedResourceHolder.hpp"
 
+//Default constructor, similar to the one in MainMenu. Initializes the texts, strings, and shapes.
+
 TimedResourceHolder :: TimedResourceHolder() : reset_button(sf::Vector2f(50.0,40.0)), menu_button(sf::Vector2f(50.0,40.0))
 {
 
@@ -66,6 +68,7 @@ TimedResourceHolder :: TimedResourceHolder() : reset_button(sf::Vector2f(50.0,40
 	menu.setStyle(0);
 }
 
+//setter that changes the string s to the current score and sets it into the score text.
 
 void TimedResourceHolder:: changeScore(int newScore)
 {
@@ -74,12 +77,16 @@ void TimedResourceHolder:: changeScore(int newScore)
 	score.setString(s);
 }
 
-	
+//setter that changes the current combo counter.
+
 void TimedResourceHolder :: changeComboUpdate(int comboUpdate)
 {
 	combo_update = std::to_string(comboUpdate);
 	combo_display.setString("Combo : " + combo_update);
 }
+
+//setter that updates the gamestatus text for when 
+//blocks are cleared.
 
 void TimedResourceHolder ::changeScoreUpdate(int scoreUpdate)
 {
@@ -87,11 +94,15 @@ void TimedResourceHolder ::changeScoreUpdate(int scoreUpdate)
 	gamestatus.setString( "+ " + score_update + "points!");
 }
 
+//general setter for gamestatus. used to wipe the gamestatus text or show gameover amongst
+//other usages.
 
 void TimedResourceHolder ::gamestatus_changeString (std::string string)
 {
 	gamestatus.setString(string);
 }
+
+//renders everything displayed when the game is playing other than the actual blocks.
 
 void TimedResourceHolder:: drawAll( sf:: RenderTarget& window, sf::RenderStates state, Blocktree& mainTree)
 {
@@ -110,6 +121,8 @@ void TimedResourceHolder:: drawAll( sf:: RenderTarget& window, sf::RenderStates 
 	window.draw(dropTime);
 }
 
+//updates the time displayed
+
 void TimedResourceHolder:: timerUpdate(Blocktree& mainTree)
 
 {
@@ -117,6 +130,10 @@ void TimedResourceHolder:: timerUpdate(Blocktree& mainTree)
 	timer.setString("Timer : " + time_update);
 
 }
+
+//function that writes the highscore to our textfile
+//only if the game ends.
+
 bool TimedResourceHolder :: write_highScore()
 {
 	bool is_empty = true;
@@ -217,6 +234,8 @@ bool TimedResourceHolder :: write_highScore()
 
 		
 }
+
+//sets the timer until drop occurs.
 
 void TimedResourceHolder :: changeDropTime(float drop_time)
 {
